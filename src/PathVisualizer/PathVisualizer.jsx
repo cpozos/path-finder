@@ -24,7 +24,7 @@ export default class PathVisualizer extends Component {
     onMouseDown(row, col) {
         const grid = this.state.grid;
         grid.toogleWallPropertyNode(row, col);
-        this.setState({grid: grid, isMoussePressed: true});
+        this.setState({isMoussePressed: true});
     }
     
     onMouseEnter(row, col) {
