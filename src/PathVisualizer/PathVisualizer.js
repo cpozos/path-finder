@@ -13,7 +13,7 @@ export default class PathVisualizer extends Component {
 
     componentDidMount(){
         const nodes = [];
-        for (let row =0; row<15; row++){
+        for (let row =0; row < 50; row++){
             const currentRow = [];
             for (let col =0; col < 50; col++){
                 const currentNode = {
@@ -36,12 +36,12 @@ export default class PathVisualizer extends Component {
                 {nodes.map((row, rowIdx) => {
                     return (
                         <div key={rowIdx}>
-                            {row.map((node, nodeIdx)=>{
-                                return <Node key={nodeIdx} isStart={true} test={'foo'}></Node>
-                            })};
+                            { row.map((node, nodeIdx)=> {
+                                return <Node key={nodeIdx}></Node>
+                            })}
                         </div>
                     )
-                })};
+                })}
             </div>
         );
     }
