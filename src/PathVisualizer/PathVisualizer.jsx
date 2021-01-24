@@ -33,6 +33,8 @@ export default class PathVisualizer extends Component {
         const grid = this.state.grid;
         grid.setWallPropertyNode(row, col, true);
         this.setState({grid: grid});
+        // Check for future modifications:
+        // https://stackoverflow.com/questions/33080657/react-update-one-item-in-a-list-without-recreating-all-items
     }
     
     onMouseUp() {
