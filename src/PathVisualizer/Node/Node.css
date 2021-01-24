@@ -1,12 +1,25 @@
 .node {
-  display: block;
-  margin: 0;
-  padding: 0;
-  float: left;
-  background-color: white;
-  border: black;
-  border-style: solid;
-  border-width: 0.5px;
-  height: 10px;
-  width: 10px;
+  width: 25px;
+  height: 25px;
+  outline: 1px solid rgb(175, 216, 248);
+  display: inline-block;
+}
+
+.node-finish {
+  background-color: red;
+}
+
+.node-start {
+  background-color: green;
+}
+
+.node-visited {
+  animation-name: visitedAnimation;
+  animation-duration: 1.5s;
+  animation-timing-function: ease-out;
+  animation-delay: 0;
+  animation-direction: alternate;
+  animation-iteration-count: 1;
+  animation-fill-mode: forwards;
+  animation-play-state: running;
 }
