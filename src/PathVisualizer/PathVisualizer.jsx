@@ -1,43 +1,68 @@
 import React, {Component} from 'react';
 import Node from './Node/Node';
 
+import {dijkstra, getNodesInShortestPathOrder} from '../algorithms/dijkstra';
+import {Grid} from '../algorithms/node';
 import './PathVisualizer.css';
-
-const START_NODE_ROW = 10;
-const START_NODE_COL = 15;
-const FINISH_NODE_ROW = 10;
-const FINISH_NODE_COL = 35;
 
 export default class PathVisualizer extends Component {
     constructor(props){
         super(props);
         this.state = {
-            grid:[],
+            grid: new Grid(20,50),
             isMoussePressed:false
         }
     }
 
     componentDidMount(){
-        const grid = []
-        for (let row = 0; row < 20; row++) {
-            const currentRow = [];
-            for (let col = 0; col < 50; col++) {
-                currentRow.push(createNode(col, row));
-            }
-            grid.push(currentRow);
-        }
-        this.setState({grid})
+        const grid = this.state.grid;
+        grid.setStartNode(10,10);
+        grid.setTargetNode(10,35);
+        this.setState({grid: grid});
     }
 
-    handleMouseDown(row, col) {
-        const newGrid = getNewGridWithWallToggled(this.state.grid, row, col);
-        this.setState({grid: newGrid, mouseIsPressed: true});
+    onMouseDown(row, col) {
+        const grid = this.state.grid;
+        grid.toogleWallPropertyNode(row, col);
+        this.setState({grid: grid, isMoussePressed: true});
     }
     
-    handleMouseEnter(row, col) {
+    onMouseEnter(row, col) {
+        if (!this.state.isMoussePressed) 
+            return;
+        const grid = this.state.grid;
+        grid.setWallPropertyNode(row, col, true);
+        this.setState({grid: grid});
     }
     
-    handleMouseUp() {
+    onMouseUp() {
+        this.setState({isMoussePressed: false});
+    }
+
+    animateDijkstra(visitedNodesInOrder, nodesInShortestPathOrder) {
+        for (let i = 0; i <= visitedNodesInOrder.length; i++) {
+          if (i === visitedNodesInOrder.length) {
+            setTimeout(() => {
+              this.animateShortestPath(nodesInShortestPathOrder);
+            }, 10 * i);
+            return;
+          }
+          setTimeout(() => {
+            const node = visitedNodesInOrder[i];
+            document.getElementById(`node-${node.row}-${node.col}`).className =
+              'node node-visited';
+          }, 10 * i);
+        }
+    }
+
+    computeDijkstra() {
+        // Variables
+        const {grid} = this.state;
+
+        // Computes 
+        const visitedNodesInOrder = dijkstra(grid);
+        const nodesInShortestPathOrder = getNodesInShortestPathOrder(grid.targetNode);
+        this.animateDijkstra(visitedNodesInOrder, nodesInShortestPathOrder);
     }
 
     render(){
@@ -45,51 +70,34 @@ export default class PathVisualizer extends Component {
         console.log(grid);
 
         return(
-            <div className="grid"> 
-                {grid.map((row, rowIdx) => {
-                    return (
-                        <div key={rowIdx}>
-                            {row.map((node, nodeIdx)=> {
-                                const {row, col, isFinish, isStart, isWall} = node;
-                                return <Node 
-                                    key={nodeIdx}
-                                    row={row}
-                                    col={col}
-                                    isFinish={isFinish}
-                                    isWall={isWall}
-                                    onMouseDown={(row, col) => this.handleMouseDown(row, col)}
-                                    onMouseEnter={(row, col) => this.handleMouseEnter(row, col)}
-                                    onMouseUp={() => this.handleMouseUp()}
-                                ></Node>
-                            })}
-                        </div>
-                    )
-                })}
+            <div>
+                <button onClick={() => this.computeDijkstra()}>
+                    Visualize Dijkstra's Algorithm
+                </button>
+                <div className="grid"> 
+                    {grid.getNodes().map((row, rowIdx) => {
+                        return (
+                            <div key={rowIdx}>
+                                {row.map((node, nodeIdx)=> {
+                                    const row = node.row;
+                                    const col = node.col; 
+                                    return <Node 
+                                        key={nodeIdx}
+                                        row={row}
+                                        col={col}
+                                        isStart={grid.isStartNode(row,col)}
+                                        isTarget={grid.isTargetNode(row, col)}
+                                        isWall={node.isWall}
+                                        onMouseDown={(row, col) => this.onMouseDown(row, col)}
+                                        onMouseEnter={(row, col) => this.onMouseEnter(row, col)}
+                                        onMouseUp={() => this.onMouseUp()}
+                                    ></Node>
+                                })}
+                            </div>
+                        )
+                    })}
+                </div>
             </div>
         );
     }
 }
-
-const createNode = (col, row) => {
-    return {
-      col,
-      row,
-      isStart: row === START_NODE_ROW && col === START_NODE_COL,
-      isFinish: row === FINISH_NODE_ROW && col === FINISH_NODE_COL,
-      distance: Infinity,
-      isVisited: false,
-      isWall: false,
-      previousNode: null,
-    };
-};
-
-const getNewGridWithWallToggled = (grid, row, col) => {
-    const newGrid = grid.slice();
-    const node = newGrid[row][col];
-    const newNode = {
-      ...node,
-      isWall: !node.isWall,
-    };
-    newGrid[row][col] = newNode;
-    return newGrid;
-};

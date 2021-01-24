@@ -17,7 +17,7 @@ export default class Node extends Component {
         const {
             row,
             col,
-            isFinish,
+            isTarget,
             isStart,
             isWall,
             onMouseDown,
@@ -26,7 +26,7 @@ export default class Node extends Component {
         } = this.props;
 
       const className = 
-        isFinish ? 'node-finish'
+        isTarget ? 'node-target'
         : isStart ? 'node-start'
         : isWall ? 'node-wall'
         : '';
