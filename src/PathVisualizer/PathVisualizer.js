@@ -18,11 +18,20 @@ export default class PathVisualizer extends Component {
     }
 
     componentDidMount(){
-        const grid = getInitialGrid();
+        const grid = []
+        for (let row = 0; row < 20; row++) {
+            const currentRow = [];
+            for (let col = 0; col < 50; col++) {
+                currentRow.push(createNode(col, row));
+            }
+            grid.push(currentRow);
+        }
         this.setState({grid})
     }
 
     handleMouseDown(row, col) {
+        const newGrid = getNewGridWithWallToggled(this.state.grid, row, col);
+        this.setState({grid: newGrid, mouseIsPressed: true});
     }
     
     handleMouseEnter(row, col) {
@@ -40,11 +49,17 @@ export default class PathVisualizer extends Component {
                 {grid.map((row, rowIdx) => {
                     return (
                         <div key={rowIdx}>
-                            { row.map((node, nodeIdx)=> {
-                                return <Node key={nodeIdx}
-                                onMouseDown={(row, col) => this.handleMouseDown(row, col)}
-                                onMouseEnter={(row, col) => this.handleMouseEnter(row, col)}
-                                onMouseUp={() => this.handleMouseUp()}
+                            {row.map((node, nodeIdx)=> {
+                                const {row, col, isFinish, isStart, isWall} = node;
+                                return <Node 
+                                    key={nodeIdx}
+                                    row={row}
+                                    col={col}
+                                    isFinish={isFinish}
+                                    isWall={isWall}
+                                    onMouseDown={(row, col) => this.handleMouseDown(row, col)}
+                                    onMouseEnter={(row, col) => this.handleMouseEnter(row, col)}
+                                    onMouseUp={() => this.handleMouseUp()}
                                 ></Node>
                             })}
                         </div>
@@ -54,18 +69,6 @@ export default class PathVisualizer extends Component {
         );
     }
 }
-
-const getInitialGrid = () => {
-    const grid = [];
-    for (let row = 0; row < 20; row++) {
-      const currentRow = [];
-      for (let col = 0; col < 50; col++) {
-        currentRow.push(createNode(col, row));
-      }
-      grid.push(currentRow);
-    }
-    return grid;
-};
 
 const createNode = (col, row) => {
     return {
