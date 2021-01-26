@@ -12,5 +12,5 @@ Also known as Dijkstra's Shortest Path First algorithm was developed by computer
 
 
 ## Demo
-Click below to play around with the demo
+Click on the next link to play around with the demo
 [Path finder demo](https://cpozos.github.io/path-finder/)
