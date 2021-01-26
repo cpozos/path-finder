@@ -46,7 +46,6 @@ export class Grid{
     }
 
     setWallPropertyNode(row,col,value){
-        const isWall = this.#nodes[row][col].isWall;
         this.#nodes[row][col].isWall = value;
     }
 
