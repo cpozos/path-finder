@@ -4,10 +4,13 @@ Visualization of algorithms to find the shortest path from a start node to a tar
 
 # Contents
 
-[1. Dijkstra algorithm]
+[1. Dijkstra algorithm](#Dijkstra)
+
 
 ## Dijkstra
 Also known as Dijkstra's Shortest Path First algorithm was developed by computer scientist Edsger W. Dijkstra in 1956
 
 
-[Demo](https://cpozos.github.io/path-finder/)
+## Demo
+Click below to play around with the demo
+[Path finder demo](https://cpozos.github.io/path-finder/)
