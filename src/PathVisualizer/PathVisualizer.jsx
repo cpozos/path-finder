@@ -41,6 +41,16 @@ export default class PathVisualizer extends Component {
         this.setState({isMoussePressed: false});
     }
 
+    computeDijkstra() {
+        // Variables
+        const {grid} = this.state;
+
+        // Computes 
+        const visitedNodesInOrder = dijkstra(grid);
+        const nodesInShortestPathOrder = getNodesInShortestPathOrder(grid.targetNode);
+        this.animateDijkstra(visitedNodesInOrder, nodesInShortestPathOrder);
+    }
+
     animateDijkstra(visitedNodesInOrder, nodesInShortestPathOrder) {
         for (let i = 0; i <= visitedNodesInOrder.length; i++) {
           if (i === visitedNodesInOrder.length) {
@@ -57,14 +67,14 @@ export default class PathVisualizer extends Component {
         }
     }
 
-    computeDijkstra() {
-        // Variables
-        const {grid} = this.state;
-
-        // Computes 
-        const visitedNodesInOrder = dijkstra(grid);
-        const nodesInShortestPathOrder = getNodesInShortestPathOrder(grid.targetNode);
-        this.animateDijkstra(visitedNodesInOrder, nodesInShortestPathOrder);
+    animateShortestPath(nodesInShortestPathOrder) {
+        for (let i = 0; i < nodesInShortestPathOrder.length; i++) {
+          setTimeout(() => {
+            const node = nodesInShortestPathOrder[i];
+            document.getElementById(`node-${node.row}-${node.col}`).className =
+              'node node-shortest-path';
+          }, 50 * i);
+        }
     }
 
     render(){
