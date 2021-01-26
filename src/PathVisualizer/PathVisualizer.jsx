@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import Node from './Node/Node';
 
-import {dijkstra, getNodesInShortestPathOrder} from '../algorithms/dijkstra';
+import {dijkstra, dijkstra_2, getNodesInShortestPathOrder} from '../algorithms/dijkstra';
 import {Grid} from '../algorithms/node';
 import './PathVisualizer.css';
 
@@ -17,7 +17,7 @@ export default class PathVisualizer extends Component {
     componentDidMount(){
         const grid = this.state.grid;
         grid.setStartNode(10,10);
-        grid.setTargetNode(10,35);
+        grid.setTargetNode(10,40);
         this.setState({grid: grid});
     }
 
@@ -46,7 +46,7 @@ export default class PathVisualizer extends Component {
         const {grid} = this.state;
 
         // Computes 
-        const visitedNodesInOrder = dijkstra(grid);
+        const visitedNodesInOrder = dijkstra_2(grid);
         const nodesInShortestPathOrder = getNodesInShortestPathOrder(grid.targetNode);
         this.animateDijkstra(visitedNodesInOrder, nodesInShortestPathOrder);
     }
@@ -97,8 +97,8 @@ export default class PathVisualizer extends Component {
                                         key={nodeIdx}
                                         row={row}
                                         col={col}
-                                        isStart={grid.isStartNode(row,col)}
-                                        isTarget={grid.isTargetNode(row, col)}
+                                        isStart={grid.isStartNode(node)}
+                                        isTarget={grid.isTargetNode(node)}
                                         isWall={node.isWall}
                                         onMouseDown={(row, col) => this.onMouseDown(row, col)}
                                         onMouseEnter={(row, col) => this.onMouseEnter(row, col)}

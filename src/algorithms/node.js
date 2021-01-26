@@ -1,5 +1,3 @@
-import Node from "../PathVisualizer/Node/Node";
-
 export class NodeModel{
     constructor(row, col){
         this.row = row;
@@ -7,6 +5,11 @@ export class NodeModel{
         this.distance = Infinity;
         this.isWall = false;
         this.previousNode = null;
+        this.isVisited = false;
+    }
+
+    equals(node){
+        return this.row === node.row && this.col === node.col;
     }
 }
 
@@ -27,16 +30,10 @@ export class Grid{
     }
 
     setStartNode(row, col){
-        if (this.startNode){
-            this.#nodes[this.startNode.row][this.startNode.col].isStartNode = false;
-        }
         this.startNode = this.#nodes[row][col];
     }
 
     setTargetNode(row,col){
-        if (this.targetNode){
-            this.#nodes[this.targetNode.row][this.targetNode.col].isStartNode = false;
-        }
         this.targetNode = this.#nodes[row][col];
     }
 
@@ -53,12 +50,23 @@ export class Grid{
         return this.#nodes;
     }
 
+    getAllNodes(){
+        const nodes = [];
+        for (let i = 0; i < this.#nodes.length; i++) {
+            const row = this.#nodes[i];
+            for (let j = 0; j < row.length; j++) {
+                nodes.push(row[j]);
+            }
+        }
+        return nodes;
+    }
+
     getNodesSortedByDistance(){        
         const nodes = [];
         for (let i = 0; i < this.#nodes.length; i++) {
             const row = this.#nodes[i];
             for (let j = 0; j < row.length; j++) {
-                nodes.push(node);
+                nodes.push(row[j]);
             }
         }
 
@@ -66,19 +74,30 @@ export class Grid{
         return nodes;
     }
 
-    isTargetNode(row, col){
-        return this.targetNode.row == row && this.targetNode.col == col;
-    }
-
     isTargetNode(node){
-        return this.targetNode.row == node.row && this.targetNode.col == node.col;
-    }
-
-    isStartNode(row, col){
-        return this.startNode.row == row && this.startNode.col == col;
+        return this.targetNode.row === node.row && this.targetNode.col === node.col;
     }
 
     isStartNode(node){
-        return this.startNode.row == node.row && this.startNode.col == node.col;
+        return this.startNode.row === node.row && this.startNode.col === node.col;
+    }
+
+    getUnvisitedNeighbors(node){
+        const neighbors = [];
+        const col = node.col;
+        const row = node.row;
+        if (row > 0) neighbors.push(this.#nodes[row - 1][col]);
+        if (row < this.#nodes.length - 1) neighbors.push(this.#nodes[row + 1][col]);
+        if (col > 0) neighbors.push(this.#nodes[row][col - 1]);
+        if (col < this.#nodes[0].length - 1) neighbors.push(this.#nodes[row][col + 1]);
+        return neighbors.filter(neighbor => !neighbor.isVisited);
+    }
+
+    updateUnvisitedNeighbors(node){
+        const unvisitedNeighbors = this.getUnvisitedNeighbors(node);
+        for (const neighbor of unvisitedNeighbors) {
+            neighbor.distance = node.distance + 1;
+            neighbor.previousNode = node;
+        }
     }
 }

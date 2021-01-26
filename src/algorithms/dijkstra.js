@@ -1,11 +1,13 @@
 export function dijkstra_2(grid){
-    const startNode = grid.startNode;
-    startNode.distance = 0;
+    grid.startNode.distance = 0;
     
     const visitedNodesInOrder = [];
-    const unvisitedNodes = grid.getNodesSortedByDistance();
+    let unvisitedNodes = grid.getAllNodes();
 
     while (!!unvisitedNodes.length){
+
+      // Sort them 
+      sortNodesByDistance(unvisitedNodes);
 
       // Get the first element
       const closestNode = unvisitedNodes.shift();
@@ -13,19 +15,23 @@ export function dijkstra_2(grid){
       // Skip it if it is a wall
       if (closestNode.isWall) continue;
       // It has finished
-      if (closestNode.distance === Infinity) return visitedNodesInOrder;
+      if (closestNode.distance === Infinity){
+        return visitedNodesInOrder;
+      } 
 
       // Appends the closest one
       closestNode.isVisited = true;
       visitedNodesInOrder.push(closestNode);
       
       // Finish condition
-      if (closestNode === grid.finishNode) return visitedNodesInOrder;
-
-      updateUnvisitedNeighbors(closestNode, grid);
+      if (closestNode === grid.targetNode) {
+        return visitedNodesInOrder;
+      }
+      
+      // Update unvisited neighbors
+      grid.updateUnvisitedNeighbors(closestNode);
     }
 }
-
 
 export function dijkstra(grid, startNode, finishNode) {
     const visitedNodesInOrder = [];
