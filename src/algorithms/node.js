@@ -28,9 +28,10 @@ export class Grid{
 
     setStartNode(row, col){
         if (this.startNode){
-            this.startNode.isStart = false;
+            this.#nodes[this.startNode.row][this.startNode.col].isStartNode = false;
         }
         this.startNode = this.#nodes[row][col];
+        this.startNode.isStartNode = true;
     }
 
     setTargetNode(row,col){
@@ -52,6 +53,19 @@ export class Grid{
 
     getNodes(){
         return this.#nodes;
+    }
+
+    getNodesSortedByDistance(){        
+        const nodes = [];
+        for (let i = 0; i < this.#nodes.length; i++) {
+            const row = this.#nodes[i];
+            for (let j = 0; j < row.length; j++) {
+                nodes.push(node);
+            }
+        }
+
+        nodes.sort((a,b) => a.distance - b.distance)
+        return nodes;
     }
 
     isTargetNode(row, col){
