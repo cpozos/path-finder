@@ -31,12 +31,11 @@ export class Grid{
             this.#nodes[this.startNode.row][this.startNode.col].isStartNode = false;
         }
         this.startNode = this.#nodes[row][col];
-        this.startNode.isStartNode = true;
     }
 
     setTargetNode(row,col){
         if (this.targetNode){
-            this.targetNode.isTarget = false;
+            this.#nodes[this.targetNode.row][this.targetNode.col].isStartNode = false;
         }
         this.targetNode = this.#nodes[row][col];
     }
@@ -72,7 +71,15 @@ export class Grid{
         return this.targetNode.row == row && this.targetNode.col == col;
     }
 
+    isTargetNode(node){
+        return this.targetNode.row == node.row && this.targetNode.col == node.col;
+    }
+
     isStartNode(row, col){
         return this.startNode.row == row && this.startNode.col == col;
+    }
+
+    isStartNode(node){
+        return this.startNode.row == node.row && this.startNode.col == node.col;
     }
 }
